@@ -1,0 +1,440 @@
+/* ============================================================
+   GLOBAL RESET & BASE
+   ============================================================ */
+
+/* box-sizing: border-box σε όλα τα elements.
+   Σημαίνει: width/height περιλαμβάνει padding+border,
+   δεν "ξεχειλίζουν" τα elements από το container τους. */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* Default font + background για όλη την εφαρμογή */
+body {
+  margin: 0;
+  font-family: monospace;
+  background-color: #f8f8f6;
+  color: #1a1a1a;
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+
+/* Το εξώτατο div του component.
+   max-width: κρατάει το layout σε λογικό πλάτος.
+   margin: 0 auto: το κεντράρει οριζόντια. */
+.scanner {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+.scanner__header {
+  margin-bottom: 32px;
+}
+
+.scanner__title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 6px;
+  letter-spacing: -0.02em;
+}
+
+.scanner__subtitle {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+/* ============================================================
+   INPUT ROW
+   ============================================================ */
+
+/* Flexbox row: input παίρνει όλο τον χώρο, button δίπλα σε σταθερό μέγεθος */
+.scanner__input-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 32px;
+}
+
+/* flex: 1 = παίρνει όλο τον υπόλοιπο χώρο του row */
+.scanner__input {
+  flex: 1;
+  font-family: monospace;
+  font-size: 14px;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+  background: #fff;
+  color: #1a1a1a;
+  transition: border-color 0.15s;
+}
+
+.scanner__input:focus {
+  border-color: #888;
+}
+
+.scanner__input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.scanner__btn {
+  padding: 0 20px;
+  font-family: monospace;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+  color: #1a1a1a;
+  cursor: pointer;
+  transition: background 0.15s, opacity 0.15s;
+  white-space: nowrap;
+}
+
+.scanner__btn:hover:not(:disabled) {
+  background: #f0f0f0;
+}
+
+.scanner__btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   LOADING STATE
+   ============================================================ */
+
+.scanner__loading {
+  padding: 40px;
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+  background: #f2f2f0;
+  border-radius: 8px;
+  border: 0.5px solid #ddd;
+}
+
+.scanner__loading-icon {
+  font-size: 22px;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.scanner__loading-hint {
+  margin-top: 8px;
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+/*
+   MESSAGES — error (κόκκινο) και warning (κίτρινο)
+*/
+
+.scanner__error {
+  padding: 16px 20px;
+  border-radius: 8px;
+  background: #FCEBEB;
+  border: 1px solid #F09595;
+  color: #A32D2D;
+  font-size: 14px;
+}
+
+.scanner__warning {
+  padding: 16px 20px;
+  border-radius: 8px;
+  background: #FAEEDA;
+  border: 1px solid #EF9F27;
+  color: #854F0B;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+/*
+   VERDICT BANNER
+*/
+
+.verdict {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  border-width: 1.5px;
+  border-style: solid;
+}
+
+.verdict__left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.verdict__icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.verdict__label-hint {
+  font-size: 13px;
+  opacity: 0.75;
+}
+
+.verdict__label {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.verdict__score-hint {
+  font-size: 13px;
+  opacity: 0.75;
+  text-align: right;
+}
+
+.verdict__score {
+  font-size: 28px;
+  font-weight: 700;
+  text-align: right;
+}
+
+.verdict--safe       { background: #EAF3DE; border-color: #639922; color: #3B6D11; }
+.verdict--suspicious { background: #FAEEDA; border-color: #BA7517; color: #854F0B; }
+.verdict--dangerous  { background: #FCEBEB; border-color: #E24B4A; color: #A32D2D; }
+.verdict--unknown    { background: #F1EFE8; border-color: #B4B2A9; color: #5F5E5A; }
+
+.verdict--safe       .verdict__icon { background: #639922; }
+.verdict--suspicious .verdict__icon { background: #BA7517; }
+.verdict--dangerous  .verdict__icon { background: #E24B4A; }
+.verdict--unknown    .verdict__icon { background: #B4B2A9; }
+
+/*
+   HOST INFO CARDS
+ */
+
+.host-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.host-info__card {
+  background: #f2f2f0;
+  border-radius: 8px;
+  padding: 12px 16px;
+}
+
+.host-info__label {
+  font-size: 11px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+
+.host-info__value {
+  font-size: 15px;
+  font-weight: 500;
+  color: #1a1a1a;
+  word-break: break-all;
+}
+
+/*
+   PORTS TABLE
+*/
+
+.ports-header {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 12px;
+}
+
+.ports-table-wrap {
+  border: 0.5px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 32px;
+}
+
+.ports-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.ports-table thead tr {
+  background: #f2f2f0;
+}
+
+.ports-table th {
+  padding: 10px 16px;
+  text-align: left;
+  font-weight: 500;
+  font-size: 12px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 0.5px solid #ddd;
+}
+
+.ports-table td {
+  padding: 10px 16px;
+  color: #1a1a1a;
+}
+
+.ports-table tbody tr:not(:last-child) td {
+  border-bottom: 0.5px solid #ddd;
+}
+
+.ports-table tbody tr {
+  background: #fff;
+  transition: background 0.1s;
+  cursor: pointer;
+}
+
+.ports-table tbody tr:hover {
+  background: #fafaf8;
+}
+
+.ports-table .col-port  { font-weight: 600; }
+.ports-table .col-state { color: #888; }
+
+/*
+   PORT DESCRIPTION ROW
+ */
+
+.row-desc td {
+  padding: 8px 16px 14px 16px;
+  background: #fafaf8;
+}
+
+.port-desc {
+  font-size: 13px;
+  color: #555;
+  line-height: 1.6;
+}
+
+.port-desc__label {
+  font-weight: 600;
+  color: #333;
+  margin-right: 4px;
+}
+
+/*
+   RISK BADGE
+ */
+
+.risk-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-width: 1px;
+  border-style: solid;
+}
+
+.risk-badge--low    { background: #EAF3DE; color: #3B6D11; border-color: #97C459; }
+.risk-badge--medium { background: #FAEEDA; color: #854F0B; border-color: #EF9F27; }
+.risk-badge--high   { background: #FCEBEB; color: #A32D2D; border-color: #F09595; }
+
+/*
+   HISTORY
+*/
+
+.history {
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 0.5px solid #ddd;
+}
+
+.history__title {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.history__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.history__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: 0.5px solid #ddd;
+  background: #fff;
+  cursor: pointer;
+  transition: background 0.1s;
+  font-family: monospace;
+  font-size: 13px;
+}
+
+.history__item:hover {
+  background: #f5f5f3;
+}
+
+.history__item-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.history__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.history__dot--safe       { background: #639922; }
+.history__dot--suspicious { background: #BA7517; }
+.history__dot--dangerous  { background: #E24B4A; }
+.history__dot--unknown    { background: #B4B2A9; }
+
+.history__target {
+  color: #1a1a1a;
+  font-weight: 500;
+}
+
+.history__item-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #888;
+  font-size: 12px;
+}
+
+.history__score {
+  font-weight: 600;
+  color: #555;
+}
